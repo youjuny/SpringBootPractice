@@ -1,5 +1,6 @@
 package com.korea.basic2.question;
 
+import com.korea.basic2.answer.AnswerForm;
 import com.korea.basic2.question.Question;
 import com.korea.basic2.question.QuestionService;
 import jakarta.validation.Valid;
@@ -26,14 +27,14 @@ public class QuestionController {
     }
 
     @GetMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id) {
+    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
         Question question = this.questionService.getQuestion(id);
         model.addAttribute("question", question);
         return "question_detail";
     }
 
     @GetMapping("/create")
-    public String questionCreate(){
+    public String questionCreate(QuestionForm questionForm){
         return "question_form";
     }
 
