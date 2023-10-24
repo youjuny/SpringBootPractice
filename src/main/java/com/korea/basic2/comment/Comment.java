@@ -45,6 +45,4 @@ public class Comment {
         return result;
     }
 
-
-
 }

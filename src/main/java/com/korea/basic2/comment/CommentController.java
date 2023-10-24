@@ -58,6 +58,35 @@ public class CommentController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping(value ="/create/answer/{id}")
+    public String createAnswerComment(CommentForm commentForm) {
+        return "comment_form";
+    }
+
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping(value = "/create/answer/{id}")
+    public String createAnswerComment(Model model, @PathVariable("id") Integer id, @Valid CommentForm commentForm,
+                                        BindingResult bindingResult, Principal principal) {
+        Answer answer = this.answerService.getAnswer(id);
+        SiteUser user = this.userService.getUser(principal.getName());
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("answer", answer);
+            return "question_detail";
+        }
+
+        Comment comment = this.commentService.create(answer, commentForm.getContent(), user);
+        return String.format("redirect:/question/detail/%s#comment_%s", comment.getAnswer().getId(), comment.getId());
+    }
+
+    // 여기서 막힌다.... url은 제대로 이동하는데 왜 404 오류가 나는지 모르겠다.
+
+
+
+
+
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     public String modifyComment(CommentForm commentForm, @PathVariable("id") Integer id, Principal principal) {
         Optional<Comment> comment = this.commentService.getComment(id);
@@ -107,7 +136,5 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
         }
     }
-
-
 
 }
