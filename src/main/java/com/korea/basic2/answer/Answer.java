@@ -1,5 +1,6 @@
 package com.korea.basic2.answer;
 
+import com.korea.basic2.comment.Comment;
 import com.korea.basic2.question.Question;
 import com.korea.basic2.user.SiteUser;
 import jakarta.persistence.*;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.SimpleFormatter;
 
@@ -33,5 +35,8 @@ public class Answer {
 
     @ManyToMany
     Set<SiteUser> voter;
+
+    @OneToMany(mappedBy = "answer")
+    private List<Comment> commentList;
 
 }

@@ -1,6 +1,7 @@
 package com.korea.basic2.question;
 
 import com.korea.basic2.answer.Answer;
+import com.korea.basic2.comment.Comment;
 import com.korea.basic2.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,5 +37,8 @@ public class Question {
 
     @ManyToMany
     Set<SiteUser> voter;
+
+    @OneToMany(mappedBy = "question")
+    private List<Comment> commentList;
 
 }

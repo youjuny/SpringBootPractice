@@ -41,6 +41,8 @@ public class AnswerController {
                 answer.getQuestion().getId(), answer.getId());
     }
 
+
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal) {
@@ -88,6 +90,8 @@ public class AnswerController {
         return String.format("redirect:/question/detail/%s#answer_%s",
                 answer.getQuestion().getId(), answer.getId());
     }
+
+
 
 
 }
