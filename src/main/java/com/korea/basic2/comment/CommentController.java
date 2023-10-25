@@ -76,10 +76,9 @@ public class CommentController {
         }
 
         Comment comment = this.commentService.create(answer, commentForm.getContent(), user);
-        return String.format("redirect:/question/detail/%s#comment_%s", comment.getAnswer().getId(), comment.getId());
+        return String.format("redirect:/question/detail/%s#comment_%s", comment.getQuestionId(), comment.getId());
     }
 
-    // 여기서 막힌다.... url은 제대로 이동하는데 왜 404 오류가 나는지 모르겠다.
 
 
 
