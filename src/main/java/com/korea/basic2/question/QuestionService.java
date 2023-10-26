@@ -55,13 +55,14 @@ public class QuestionService {
         this.questionRepository.save(q);
     }
 
-    public Page<Question> getList(int page, String kw) {
+    public Page<Question> getList(int page, String kw, String category) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        Specification<Question> spec = search(kw);
+        Specification<Question> spec = search(kw, category);
         return this.questionRepository.findAll(spec, pageable);
     }
+
 
     public void modify(Question question, String subject, String content, String category) {
         question.setSubject(subject);
@@ -80,25 +81,23 @@ public class QuestionService {
         this.questionRepository.save(question);
     }
 
-    private Specification<Question> search(String kw) {
-        return new Specification<>() {
-            private static final long serialVersionUID = 1L;
+    private Specification<Question> search(String kw, String category) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-            @Override
-            public Predicate toPredicate(Root<Question> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                query.distinct(true);  // 중복을 제거
-                Join<Question, SiteUser> u1 = q.join("author", JoinType.LEFT);
-                Join<Question, Answer> a = q.join("answerList", JoinType.LEFT);
-                Join<Answer, SiteUser> u2 = a.join("author", JoinType.LEFT);
-                return cb.or(cb.like(q.get("subject"), "%" + kw + "%"), // 제목
-                        cb.like(q.get("content"), "%" + kw + "%"),      // 내용
-                        cb.like(u1.get("username"), "%" + kw + "%"),    // 질문 작성자
-                        cb.like(a.get("content"), "%" + kw + "%"),      // 답변 내용
-                        cb.like(u2.get("username"), "%" + kw + "%"));   // 답변 작성자
+            if (!kw.isEmpty()) {
+                String keyword = "%" + kw + "%";
+                predicates.add(cb.or(
+                        cb.like(root.get("subject"), keyword)
+                ));
             }
+
+            if (!category.isEmpty()) {
+                predicates.add(cb.equal(root.get("category"), category));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
-
-
 
 }
