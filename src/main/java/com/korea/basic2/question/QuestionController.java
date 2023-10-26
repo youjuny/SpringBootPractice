@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 
 @RequestMapping("/question")
@@ -34,12 +35,15 @@ public class QuestionController {
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value="page", defaultValue="0") int page,
-                       @RequestParam(value = "kw", defaultValue = "") String kw) {
+                       @RequestParam(value = "kw", defaultValue = "") String kw, @RequestParam(value = "category", defaultValue = "") String category) {
         Page<Question> paging = this.questionService.getList(page, kw);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
+        model.addAttribute("category", category);
         return "question_list";
     }
+
+
 
     @GetMapping(value = "/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm, @RequestParam(value = "page",defaultValue = "0") int page) {

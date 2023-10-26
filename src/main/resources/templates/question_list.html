@@ -11,6 +11,14 @@
             </div>
         </div>
     </div>
+    <div class="mb-3">
+        <select th:field="*{category}" class="form-select">
+            <option value="">전체 게시판 보기</option>
+            <option value="QnA">QnA</option>
+            <option value="자유게시판">자유게시판</option>
+            <option value="강좌">강좌</option>
+        </select>
+    </div>
     <table class="table">
         <thead class="table-dark">
         <tr class="text-center">
@@ -19,6 +27,7 @@
             <th>카테고리</th>
             <th>글쓴이</th>
             <th>작성일시</th>
+            <th>조회수</th>
         </tr>
         </thead>
         <tbody>
@@ -35,6 +44,7 @@
             <td><span th:text="${question.category}"></span></td>
             <td><span th:if="${question.author != null}" th:text="${question.author.username}"></span></td>
             <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${question.view}"></td>
         </tr>
         </tbody>
     </table>
